@@ -1,0 +1,131 @@
+###employeee
+SELECT api_employee.*
+FROM api_employee
+
+#or
+select * from api_employee
+####work history
+
+SELECT api_employee.name,api_workhistory.*
+FROM api_employee, api_workhistory
+WHERE api_employee.emp_id = api_workhistory.work_historys_id
+
+
+####family members
+SELECT api_employee.name,api_familymembers.*
+FROM api_employee, api_familymembers
+WHERE api_employee.emp_id = api_familymembers.family_members_id
+
+####eductions
+SELECT emp_id,name,pan_number,pan_card,address_proof,permanent_proof,aadharcard_number,aadharcard
+FROM api_employee
+
+###attendance
+SELECT api_employee.name,api_attendance.*
+FROM api_employee, api_attendance
+WHERE api_employee.emp_id = api_attendance.emp_id_id
+
+###attendance_rule
+SELECT api_attendence_rules.*
+FROM api_attendence_rules
+
+#or
+select * from api_attendence_rules
+
+##leave rules
+select * from api_leaverules
+
+###emp leave assign
+SELECT api_employee.name,api_empleaveid.*,api_leaverules.leave_name
+FROM api_employee, api_empleaveid,api_leaverules
+WHERE api_employee.emp_id = api_empleaveid.emp_id_id and api_empleaveid.emp_leave_id =api_leaverules.leave_id
+
+
+##documents
+SELECT api_employee.name,api_documents.*
+FROM api_employee, api_documents
+WHERE api_employee.emp_id = api_documents.documents_id
+
+###emp monthly salary
+SELECT api_employee.name,api_monthlyempsalary.*
+FROM api_employee, api_monthlyempsalary
+WHERE api_employee.emp_id = api_monthlyempsalary.emp_id_id
+
+
+## emp leave tracker
+SELECT api_employee.name,api_empleaveapplied.*,api_leaverules.leave_name
+FROM api_employee, api_empleaveapplied,api_leaverules
+WHERE api_employee.emp_id = api_empleaveapplied.emp_id_id and api_empleaveapplied.leave_id_id=api_leaverules.leave_id
+
+##Employee Attendence Assign
+SELECT api_employee.name,api_attendenceleaveid.*,api_attendence_rules.ar_name
+FROM api_employee,api_attendenceleaveid,api_attendence_rules
+WHERE api_employee.emp_id = api_attendenceleaveid.emp_id_id and api_attendenceleaveid.ar_id_id =api_attendence_rules.ar_id
+
+###Current Salary
+SELECT api_employee.name,api_salary.*
+FROM api_employee, api_salary
+where api_employee.emp_id = api_salary.emp_id_id
+
+###emp monthly salary(new)
+
+select lop,no_of_days,ctc,basic,hra,conveyance_allowances,medical_allowance,month,id,cca_allowance
+,pf_employer,pf_employee,pt,esi_employer,esi_employee,net_employee_payable,due_date,emp_id_id,deductions,
+over_time,reimbursements,special_allowances,api_employee.name
+from api_monthlyempsalary
+join api_employee on api_monthlyempsalary.emp_id_id = api_employee.emp_id
+
+
+
+#####attendance(new)
+select attendance_id,work_date,login,login_image,logout_image,logout,annomaly,ip_address,ip_location,emp_id_id,api_employee.name
+from api_attendance
+join api_employee on api_attendance.emp_id_id = api_employee.emp_id
+
+###emp leave tracker(new)
+select emp_leave_app_id,start_date,end_date,status,reason,action_by_id,emp_id,leave_id_id,api_employee.name,api_leaverules.leave_name
+from api_empleaveapplied
+join api_employee on api_empleaveapplied.emp_id_id = api_employee.emp_id
+join api_leaverules on api_empleaveapplied.leave_id_id = api_leaverules.leave_id
+
+##Employee Attendence Assign(new)
+select attendance_leave_id,ar_id_id,emp_id_id,api_attendence_rules.ar_name,api_employee.name
+from api_attendenceleaveid
+join api_employee on api_attendenceleaveid.emp_id_id = api_employee.emp_id
+join api_attendence_rules on api_attendenceleaveid.ar_id_id = api_attendence_rules.ar_id
+
+
+###for filter (on the basis of month and emp_id)
+where emp_id_id in(3,2) and extract(month from month) in (1)
+
+here month 1==represents JAN
+
+
+####code for multiple filter(working code)
+export_file_query1 = "Select * from api_export where file_type='EmployeesMonthlySalary' and exfile_iscreated = FALSE LIMIT 1"
+cur_users.execute(export_file_query1)
+exports1 = cur_users.fetchall()
+for expo in exports1:
+    final =expo[13]
+    print("final: ",final)
+
+#######
+# query_params
+query_employees = query_employees +" "+ str(final)
+
+
+##postman query
+
+{
+"user_id":5,
+"file_type":"EmployeesLeaveTracker",
+"query_params":"where emp_id_id in(2) and extract(month from month) in (1)"
+
+}
+
+
+
+
+
+
+

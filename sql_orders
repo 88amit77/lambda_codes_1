@@ -1,0 +1,53 @@
+###podlist
+SELECT api_podlist.*
+FROM api_podlist
+
+filter pod(courier recieved date)
+where courier_received_date = '2021-01-01'
+
+##new_order
+select dd_id,product_id,order_id,order_item_id,order_date,dispatch_by_date,portal_id,portal_sku,qty,selling_price,mrp,
+tax_rate,warehouse_id,region,payment_method,buymore_sku,portal_account_id,
+api_dispatchdetails.location_latitude,api_dispatchdetails.location_longitude,api_dispatchdetails.email_id,api_dispatchdetails.phone,api_dispatchdetails.status,
+api_dispatchdetails.l_b_h_w,
+api_dispatchdetails.picklist_id,api_dispatchdetails.is_mark_placed,api_dispatchdetails.have_invoice_file,api_dispatchdetails.packing_status,api_dispatchdetails.is_dispatch,
+api_dispatchdetails.dispatch_confirmed,api_dispatchdetails.is_shipment_create,api_dispatchdetails.awb,api_dispatchdetails.courier_partner,api_dispatchdetails.shipment_id
+,api_dispatchdetails.is_canceled,api_dispatchdetails.cancel_inward_bin,api_dispatchdetails.created_at,api_dispatchdetails.update_at,api_dispatchdetails.mf_id_id,api_dispatchdetails.dd_paymentstatus,
+api_dispatchdetails.dd_cancelledpaymentstatus,api_dispatchdetails.dd_id_id
+From api_neworder
+join api_dispatchdetails on api_neworder.dd_id = api_dispatchdetails.dd_id_id
+
+
+filter pod(courier recieved date)
+where order_date = '2020-07-23' and portal_id = 2
+
+###fullfill return
+select dd_id,portal_id,api_fulfilledreturn.fr_id,api_fulfilledreturn.return_request_date,api_fulfilledreturn.actual_return_date,
+api_fulfilledreturn.destination_warehouse_id,api_fulfilledreturn.return_reason,api_fulfilledreturn.sub_reason,api_fulfilledreturn.awb,
+api_fulfilledreturn.return_type,api_fulfilledreturn.dd_id_id,api_fulfilledreturn.pod_id_id,
+api_refundimagetable.id,api_refundimagetable.image_list,api_refundimagetable.return_category,api_refundimagetable.return_notes,
+api_refundimagetable.tracking_id,api_refundimagetable.created_at,api_refundimagetable.updated_at,api_refundimagetable.processing_date,
+api_refundimagetable.return_type,api_refundimagetable.package_condition,api_refundimagetable.is_barcode_required,api_refundimagetable.product_condition,
+api_refundimagetable.image_correctness,api_refundimagetable.size_correctness,api_refundimagetable.alternate_product_id,api_refundimagetable.sellable,
+api_refundimagetable.dd_id_id,api_refundimagetable.pod_id_id
+from api_neworder
+join api_fulfilledreturn on api_neworder.dd_id = api_fulfilledreturn.dd_id_id
+join api_refundimagetable on api_neworder.dd_id = api_refundimagetable.dd_id_id
+
+###filter fullfilreturn
+where portal_id =2 and api_fulfilledreturn.actual_return_date = '2020-07-02'
+
+##manifest
+SELECT *
+FROM public.api_manifest
+
+###reimburesement
+SELECT *
+FROM api_reimburesement
+
+###orders_without_product_id
+
+select order_id,order_item_id,portal_sku,portal_id from api_neworder
+where product_id IS  NULL
+
+
